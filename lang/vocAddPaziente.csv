@@ -1,0 +1,47 @@
+Nuovo Paziente,New patient,مريض جديد
+Informazioni Anagrafiche,Personal details,معلومات البيانات الشخصية
+Nome,Name,الاسم الأول
+Cognome,Surname,اسم العائلة
+Nome della madre,Mother's name,اسم الأم
+Sesso,Sex,الجنس
+Maschio,Male,ذكر
+Femmina,Female,أنثى
+Data di nascita,Date of birth,تاريخ الميلاد
+Provenienza,Region of origin,المصدر
+Altro,Other,آخر
+Numero Tenda,Tent number,رقم الخيمة
+Sezione,Section,قسم
+Informazioni Cliniche,Clinical record,السجل السريري
+Anamnesi Patologica Remota,Remote pathologial history,
+Morbillo,Measles,
+Varicella,Chicken pox,
+Rosolia,Smallpox,
+Scarlattina,Scarlett fever,
+Eritema infettivo,Infectious erythema,
+Esatema critico,Critical exanthem,
+Mani-Piedi-Bocca,Hands-Feet-Mouth,
+Precedenti interventi chirurgici,Previous surgeries,
+Precedenti ricoveri in ospedale,Previous admissions,
+Precedenti visite mediche effettuate,Previous examinations,
+Malattie dei genitori,Parental diseases,
+Ipertensione,Hypertension,
+Malattie Cardio-Vascolari,Cardiovascula diseases,
+Malattie Renali,Kidney diseases,
+Malattie Allergiche,Allergic dieases,
+Obesità,Obesity,
+Diabete 1,Diabetes 1,
+Diabete 2,Diabetes 2,
+Malattie Endocrine,Edocrine diseases,
+Tumori,Tumors,
+Allergie,Allergies,
+Terapia Cronica,Chronic therapy,
+Altre terapie croniche,Other chronic therapies,
+Altro,Other,
+Vaccinazioni eseguite,Vaccinations taken,
+Note,Notes,ملحوظات
+Invia,Send,إنفيا
+Annulla,Cancel,أنولا
+Esci,Logout,تسجيل خروج
+Indietro,Back,خلف
+Aggiungi Paziente,Add Patient,إضافة مريض
+Home,Home,بيت
