@@ -47,7 +47,6 @@
                 if ($usato == 'True'){
                     $sql = "UPDATE `ricetta` SET `validità`=NULL WHERE `id_paziente`='$id' AND `num`='$num'";
                     $res = $conn->query($sql);
-                    echo "porcodio";
                 }
 
                 $sql = "SELECT * FROM `ricetta` WHERE `id_paziente` = '$id' AND `num` = '$num'";
