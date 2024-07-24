@@ -60,6 +60,7 @@
                     }
                     // stampa il messaggio
                     echo('<div class="alert alert-danger" role="alert">'.$msg.'</div>');
+
                 }
             ?>
 

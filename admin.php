@@ -123,7 +123,7 @@
 
         <br><br>
         <div class='box'>
-            <h4>Modifica Password</h4>
+            <h4>Modific Password</h4>
             <form action='adminPOST.php' method="post">
                 <div class="mb-3 row">
                     <label for="nome" class="col-sm-2 col-form-label">Vecchia Password</label>
