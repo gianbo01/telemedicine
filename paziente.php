@@ -147,7 +147,6 @@
 		<?php
 			require_once('db.php');
 			if (isset($_POST['submitPaziente'])){
-				var_dump($_POST);
 
 				$id = $_POST['id'];
 
@@ -212,12 +211,6 @@
 				if (!(empty($tc))){
 					$terapiaC = join(", ", $tc);
 				}
-				if (!(empty($altro)) && !(empty($tc))){
-					$terapiaC = $terapiaC.", ".$altro;
-				}
-				if (!(empty($altro)) && (empty($tc))){
-					$terapiaC = $altro;
-				}
 				echo "tc ".$terapiaC;
 				
 				$noteP = $_POST['noteP'] ?? '';
@@ -225,8 +218,8 @@
 					//	$sql = "INSERT INTO `paziente`(`ID`, `vaccinazioni`, `anamnesiPat`, `precInterventi`, `precRicoveri`, `precVisite`, `malattieGenitori`, `malAllergiche`, `malEndocrine`, `tumori`, `allergie`, `terapiaCronica`, `note`)
 					//		VALUES ('$id','$nome','$cognome', '$nome_madre','$sesso','$dataN','$prov','$vaccinazioni','$num_tenda','$sezione','$anamnesi','$picText','$proText','$vmeText','$genitori','$malattieA','$malattieE','$tumori','$allergie','$terapiaC','$noteP')";
 				
-				$sql = "INSERT INTO `paziente`(`ID`, `vaccinazioni`, `anamnesiPat`, `precInterventi`, `precRicoveri`, `precVisite`, `malattieGenitori`, `malAllergiche`, `malEndocrine`, `tumori`, `allergie`, `terapiaCronica`, `note`) 
-				VALUES ('$id','$vaccinazioni','$anamnesi','$picText','$proText','$vmeText','$genitori','$malattieA','$malattieE','$tumori','$allergie','$terapiaC','$noteP')";
+				$sql = "INSERT INTO `paziente`(`ID`, `vaccinazioni`, `anamnesiPat`, `precInterventi`, `precRicoveri`, `precVisite`, `malattieGenitori`, `malAllergiche`, `malEndocrine`, `tumori`, `allergie`, `terapiaCronica`, `altroTerapiaCronica`, `note`) 
+				VALUES ('$id','$vaccinazioni','$anamnesi','$picText','$proText','$vmeText','$genitori','$malattieA','$malattieE','$tumori','$allergie','$terapiaC', '$altro','$noteP')";
 
 				if ($conn->query($sql) === TRUE) {
 					echo "New record created successfully";
@@ -413,99 +406,87 @@
 
 				$conn->close();
 			}
-			elseif (isset($_POST['aggiornaPaziente'])) {
-				var_dump($_POST);
-				$id = $_POST['aggiornaPaziente'];
-
-				// Aggiornamento Anagrafica
-
-				$nome = $_POST['nome'] ?? '';
-				$cognome = $_POST['cognome'] ?? '';
-				$nome_madre = $_POST['nome_madre'] ?? '';
-				$sesso = $_POST['sesso'] ?? '';
-				$dataN = $_POST['dataN'] ?? '';
-				$prov = $_POST['prov'] ?? '';
-				$num_tenda = $_POST['num_tenda'] ?? '';
-				$sezione = $_POST['sezione'] ?? '';
-				if ($prov == 'altro'){
-					$prov = $_POST['otherProv'] ?? '';
-				}
-
-				$sql = "UPDATE `anagrafica` SET `nome`='$nome',`cognome`='$cognome',`nome_madre`='$nome_madre',`sesso`='$sesso',`dataNascita`='$dataN',`provenienza`='$prov',`num_tenda`='$num_tenda',`sezione`='$sezione' WHERE `ID` = '$id';";
-
-				$res= $conn->query($sql);
-
-				// Anagrafica
-				$sql ="SELECT A.nome, A.cognome, A.nome_madre, A.sesso, A.dataNascita, A.provenienza, A.num_tenda, A.sezione
-				FROM `anagrafica` AS A
-				WHERE `ID`= '$id';";
-
-				$res= $conn->query($sql);
-
-				$row = $res->fetch_assoc();
-
-				$nome = $row['nome'];
-				$cognome = $row['cognome'];
-				$nome_madre = $row['nome_madre'];
-				$sesso = $row['sesso'];
-				$dataN = $row['dataNascita'];
-				$prov = $row['provenienza'];
-				$num_tenda = $row['num_tenda'];
-				$sezione = $row['sezione'];
-				
-				$sql ="SELECT P.ID, P.vaccinazioni, P.anamnesiPat, P.precInterventi, P.precRicoveri, P.precVisite, P.malattieGenitori, P.malAllergiche, P.malEndocrine, P.tumori, P.allergie, P.terapiaCronica, P.note
-					FROM `paziente` AS P
-					WHERE `ID`= '$id';";
-
-				$res= $conn->query($sql);
-
-				$row = $res->fetch_assoc();
-				$infoCliniche = true;
-				if($row == 0){
-					$infoCliniche = false;
-				}
-
-				$vaccinazioni = $row['vaccinazioni'];
-				$anamnesi = $row['anamnesiPat'];
-				$picText = $row['precInterventi'];
-				$proText = $row['precRicoveri'];
-				$vmeText = $row['precVisite'];
-				$genitori = $row['malattieGenitori'];
-				$malattieA = $row['malAllergiche'];
-				$malattieE = $row['malEndocrine'];
-				$tumori = $row['tumori'];
-				$allergie = $row['allergie'];
-				$terapiaC = $row['terapiaCronica'];
-				$noteP = $row['note'];
-				
-				// Esame
-
-				$sqlEsame = "SELECT E.num_esame, E.data, E.tipo
-					FROM esame AS E
-					WHERE E.id_paziente = '$id';";
-				
-				$resEsame= $conn->query($sqlEsame);
-
-
-				// Ricetta
-
-				$sqlRicetta = "SELECT `num`, `nome`, `validità` FROM `ricetta` WHERE `id_paziente` = '$id'";
-
-				$resRicetta = $conn->query($sqlRicetta);
-
-
-				// Visita
-
-				$sqlVisita = "SELECT `id_paziente`, `num`, `date` FROM `visita` WHERE `id_paziente` = '$id'";
-
-				$resVisita = $conn->query($sqlVisita);
-
-				$conn->close();
-			}
 			else {
 
-				$id = $_GET["ID"];
-				
+				if (isset($_POST['aggiornaPaziente'])) {
+					$id = $_POST['aggiornaPaziente'];
+	
+					// Aggiornamento Anagrafica
+	
+					$nome = $_POST['nome'] ?? '';
+					$cognome = $_POST['cognome'] ?? '';
+					$nome_madre = $_POST['nome_madre'] ?? '';
+					$sesso = $_POST['sesso'] ?? '';
+					$dataN = $_POST['dataN'] ?? '';
+					$prov = $_POST['prov'] ?? '';
+					$num_tenda = $_POST['num_tenda'] ?? '';
+					$sezione = $_POST['sezione'] ?? '';
+					if ($prov == 'altro'){
+						$prov = $_POST['otherProv'] ?? '';
+					}
+	
+					$sql = "UPDATE `anagrafica` SET `nome`='$nome',`cognome`='$cognome',`nome_madre`='$nome_madre',`sesso`='$sesso',`dataNascita`='$dataN',`provenienza`='$prov',`num_tenda`='$num_tenda',`sezione`='$sezione' WHERE `ID` = '$id';";
+	
+					$res= $conn->query($sql);
+				}
+				elseif (isset($_POST['modificaInfoCliniche'])){
+					$id = $_POST['modificaInfoCliniche'];
+	
+					$vaccinazioni = $_POST['vac'] ?? '';
+					
+						// Anamnesi Patologica Remota
+					$morbillo = $_POST['morbillo'] ?? '';
+					$varicella = $_POST['varicella'] ?? '';
+					$rosolia = $_POST['rosolia'] ?? '';
+					$scarlattina = $_POST['scarlattina'] ?? '';
+					$eritema = $_POST['eritema'] ?? '';
+					$esatema = $_POST['esatema'] ?? '';
+					$mpb = $_POST['mpb'] ?? '';
+	
+					$anamnesi = $morbillo.$varicella.$rosolia.$scarlattina.$eritema.$esatema.$mpb;
+					$anamnesi = substr($anamnesi,0,(strlen($anamnesi)-2));
+	
+					$picText = $_POST['pic'] ?? '';
+					$proText = $_POST['pro'] ?? '';
+					$vmeText = $_POST['vme'] ?? '';
+	
+						// Malattie dei genitori
+					$ipertensione = $_POST['ipertensione'] ?? '';
+					$malattieCV = $_POST['malattieCV'] ?? '';
+					$malattieR = $_POST['malattieR'] ?? '';
+	
+					$malattieA = $_POST['malattieA'] ?? '';
+	
+					$obesita = $_POST['obesita'] ?? '';
+					$diabete1 = $_POST['diabete1'] ?? '';
+					$diabete2 = $_POST['diabete2'] ?? '';
+	
+					$malattieE = $_POST['malattieE'] ?? '';
+					$tumori = $_POST['tumori'] ?? '';
+					$allergie = $_POST['allergie'] ?? '';
+	
+					$genitori = $ipertensione.$malattieCV.$malattieR.$obesita.$diabete1.$diabete2;
+					$genitori = substr($genitori,0,(strlen($genitori)-2));
+	
+					$tc = $_POST['tc'] ?? '';
+					$altro = $_POST['altro'] ?? '';
+					if (!(empty($tc))){
+						$terapiaC = join(", ", $tc);
+					}
+					echo "tc ".$terapiaC;
+					
+					$noteP = $_POST['noteP'] ?? '';
+
+					$sql = "UPDATE `paziente` SET `vaccinazioni`='$vaccinazioni',`anamnesiPat`='$anamnesi',`precInterventi`='$picText',`precRicoveri`='$proText',`precVisite`='$vmeText',`malattieGenitori`='$genitori',`malAllergiche`='$malattieA',`malEndocrine`='$malattieE',`tumori`='$tumori',`allergie`='$allergie',`terapiaCronica`='$terapiaC',`altroTerapiaCronica`='$altro',`note`='$noteP' WHERE `ID` = '$id';";
+					
+					$res= $conn->query($sql);
+
+					
+				}
+				else {
+					$id = $_GET["ID"];
+				}
+
 				// Anagrafica
 				$sql ="SELECT A.nome, A.cognome, A.nome_madre, A.sesso, A.dataNascita, A.provenienza, A.num_tenda, A.sezione
 				FROM `anagrafica` AS A
@@ -524,7 +505,8 @@
 				$num_tenda = $row['num_tenda'];
 				$sezione = $row['sezione'];
 
-				$sql ="SELECT P.ID, P.vaccinazioni, P.anamnesiPat, P.precInterventi, P.precRicoveri, P.precVisite, P.malattieGenitori, P.malAllergiche, P.malEndocrine, P.tumori, P.allergie, P.terapiaCronica, P.note
+				
+				$sql ="SELECT P.ID, P.vaccinazioni, P.anamnesiPat, P.precInterventi, P.precRicoveri, P.precVisite, P.malattieGenitori, P.malAllergiche, P.malEndocrine, P.tumori, P.allergie, P.terapiaCronica, P.altroTerapiaCronica, P.note
 					FROM `paziente` AS P
 					WHERE `ID`= '$id';";
 
@@ -547,6 +529,7 @@
 				$tumori = $row['tumori'];
 				$allergie = $row['allergie'];
 				$terapiaC = $row['terapiaCronica'];
+				$altro = $row['altroTerapiaCronica'];
 				$noteP = $row['note'];
 				
 				// Esame
@@ -680,7 +663,7 @@
 						<h5>Terapia Cronica</h5>
 						<dl class='mb-3 row'>
 							<dt class='col-sm-12'>Terapia cronica</dt>
-							<dd class='col-sm-12'>".$terapiaC."</dd>
+							<dd class='col-sm-12'>".$terapiaC.", ".$altro."</dd>
 						</dl>
 						<hr class='hr'/>
 						<dl class='mb-3 row'>
@@ -830,11 +813,11 @@
 				<a href="listaPazienti.php">
 					<button type="button" class="btn btn-secondary btn-lg col-2">Torna indietro</button>
 				</a>
-			<form action='modificaPaziente.php' method='post'>
-				<button type="submit" class="btn btn-warning btn-lg col-2" style="position: absolute; left: 60%; transform: translateX(-50%); margin-top: -49px" value='<?php echo $id ?>' name='modificaP'>Modifica dati clinici</button>
-			</form>
 			<form action='modificaAnagrafica.php' method='post'>
 				<button type="submit" class="btn btn-warning btn-lg col-2" style="position: absolute; left: 40%; transform: translateX(-50%); margin-top: -49px" value='<?php echo $id ?>' name='modificaA'>Modifica anagrafica</button>
+			</form>
+			<form action='modificaInfoCliniche.php' method='post'>
+				<button type="submit" class="btn btn-warning btn-lg col-2" style="position: absolute; left: 60%; transform: translateX(-50%); margin-top: -49px" value='<?php echo $id ?>' name='modificaP'>Modifica dati clinici</button>
 			</form>
 			<form action='listaPazienti.php' method='post' onsubmit='return show_alert();'>
 				<button type="submit" class="btn btn-danger btn-lg col-2 float-end" style="margin-top: -49px;" value='<?php echo $id ?>' name='eliminaP'>Elimina</button>
