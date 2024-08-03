@@ -21,7 +21,6 @@
     <body>
         
         <?php
-            var_dump($_POST);
             $num = $_POST["modificaV"] ?? '';
             require_once('db.php');
 
@@ -43,11 +42,6 @@
             $diagnosi = $row['diagnosi'];
 
 
-            $sql = "SELECT * FROM `farmaco`;";
-
-            $res= $conn->query($sql);
-
-           // $i=0;
         ?>
 
         <nav class="navbar fixed-top navbar-expand-lg bg-primary">
@@ -110,81 +104,6 @@
                 </div>
 
 			    <hr class="hr" />
-                <h4>Inserimento Ricetta</h4>
-
-                
-
-                <p id="ricetta"></p>
-                <script>
-                    i=0;
-                    function addRicetta() {
-                    document.getElementById("ricetta").innerHTML += '\
-                        <div id="r<?php echo $i;
-                                $i=$i+1;
-                            ?>'+i+'">\
-                            <hr class="hr" />\
-                            <br>\
-                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteR('+i+');" style="margin-top: -50px">Rimuovi</button>\
-                            <div class="mb-3 row">\
-                                <label for="nf" class="col-sm-2 col-form-label">Nome Farmaco</label>\
-                                <div class="col-sm-6">\
-                                <select class="form-select"  id="nf" name="nf[]">\
-                                    <option selected>Open this select menu</option>\
-                                    <?php
-                                        require_once('db.php');
-                                        $sql = "SELECT * FROM `farmaco`;";
-
-                                        $res= $conn->query($sql);
-                                        
-                                        while($row = $res->fetch_assoc()) {
-                                            echo '<option value="'.$row["nome"].'">'.$row["nome"].'</option>\ ';
-                                        }
-                                    ?>
-                                </select>\
-                                </div>\
-                                <label for="dataVal" class="col-sm-1 col-form-label">Validità</label>\
-                                <div class="col-sm-3">\
-                                    <input type="date" class="form-control" id="dataVal" name="dataVal[]">\
-                                </div>\
-                            </div>\
-                            <div class="mb-3 row">\
-                                <label for="nf" class="col-sm-2 col-form-label">Quantità</label>\
-                                <div class="col-sm-2">\
-                                    <input type="number" class="form-control" id="qt" name="qtn[]" placeholder="#">\
-                                </div>\
-                                <div class="col-sm-3">\
-                                    <select class="form-select" id="qt" name="qtu[]" placeholder="unità">\
-                                        <option selected>Open this select menu</option>\
-                                        <option value="compressa">Compressa</option>\
-                                        <option value="confezione">Confezione</option>\
-                                    </select>\
-                                </div>\
-                                <div class="col-sm-5">\
-                                    <input type="text" class="form-control" id="qt" name="qt[]">\
-                                </div>\
-                            </div>\
-                            <div class="mb-3 row">\
-                                <label for="noteR" class="col-sm-2 col-form-label">Note</label>\
-                                <div class="col-sm-10">\
-                                    <textarea class="form-control" name="noteR[]" id="noteR" rows="5"></textarea>\
-                                </div>\
-                            </div>\
-                        </div>\
-                        ';
-                        i++;
-                    };
-
-                    function deleteR(val) {
-                        s = 'r'+val;
-                        console.log(s);
-                        document.getElementById(s).innerHTML = "";
-                    }
-                </script>
-                <input type="button" class="btn btn-primary w-100 p-1 fs-6" value="Aggiungi farmaco" onclick="addRicetta();"></button>
-                <br>
-                    
-
-			    <hr class="hr" />
                 <div class="mb-3 row">
                     <label for="tp" class="col-sm-2 col-form-label">Terapia Prescritta</label>
                     <div class="col-sm-10">
@@ -198,7 +117,7 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg" name='submitVisita'>Modifica Visita</button>
+                <button type="submit" class="btn btn-primary btn-lg" name='modificaVisita' value="<?php echo $num; ?>">Modifica Visita</button>
 
             </form>
         </div>

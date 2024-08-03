@@ -84,6 +84,31 @@
                     $k++;
                 }
             }
+            elseif (isset($_POST['modificaVisita'])){
+                
+                $num = $_POST['modificaVisita'];
+                $id = $_POST['ID'];
+                $date = $_POST['date'];
+                $psmax = $_POST['psmax'];
+                $psmin = $_POST['psmin'];
+                $fc = $_POST['fc'];
+                $sat = $_POST['sat'];
+                $fr = $_POST['fr'];
+                $tp = $_POST['tp'];
+                $note = $_POST['note'];
+
+                
+                $sql = "UPDATE `visita` SET `date`='$date',`psmax`='$psmax',`psmin`='$psmin',`freq_Cardiaca`='$fc',`saturazione`='$sat',`freq_Respiratoria`='$fr',`terapia_prescritta`='$tp',`note`='$note' WHERE `num` = '".$_POST['modificaVisita']."'";
+                $res= $conn->query($sql);
+
+
+                // ricetta
+
+                $sqlRicetta = "SELECT * FROM `ricetta` WHERE `id_paziente` = '$id' AND `num_visita` = '$num'";
+
+                $resRicetta = $conn->query($sqlRicetta);
+
+            }
             else{
                 $id = $_GET['ID'] ?? '';
                 $num = $_GET['num'] ?? '';
