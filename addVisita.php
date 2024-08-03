@@ -119,46 +119,8 @@
 
 			    <hr class="hr" />
                 <h4>Inserimento Ricetta</h4>
-    <!--        <br>
-                <div class="mb-3 row">
-                    <label for="nf" class="col-sm-2 col-form-label">Nome Farmaco</label>
-                    <div class="col-sm-6">
-						<select class="form-select"  id="nf" name="nf[]">
-							<option selected>Open this select menu</option>
-							<?php
-							//	while($row = $res->fetch_assoc()) {
-							//		echo "<option value='".$row["num"]."'>".$row["nome"]."</option>";
-							//	}
-							?>
-						</select>
-					</div>
-                    <label for="dataVal" class="col-sm-1 col-form-label">Validità</label>
-                    <div class="col-sm-3">
-                        <input type="date" class="form-control" id="dataVal" name="dataVal[]">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="nf" class="col-sm-2 col-form-label">Quantità</label>
-                    <div class="col-sm-2">
-                        <input type="number" class="form-control" id="qt" name="qtn[]" placeholder="#">
-                    </div>
-					<div class="col-sm-3">
-						<select class="form-select" id="qt" name="qtu[]" placeholder="unità">
-							<option selected>Open this select menu</option>
-							<option value="compressa">Compressa</option>
-							<option value="confezione">Confezione</option>
-						</select>
-					</div>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" id="qt" name="qt[]">
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="noteR" class="col-sm-2 col-form-label">Note</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" name="noteR[]" id="noteR" rows="5"></textarea>
-                    </div>
-                </div> -->
+
+                
 
                 <p id="ricetta"></p>
                 <script>
