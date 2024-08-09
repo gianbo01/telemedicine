@@ -41,7 +41,7 @@
 		<div class='box'>
 			<h2>Inserimento Ricetta</h2>
 			<br>
-			<form>
+			<form action="ricetta.php" method="post" class="was-validated">
 				<input type="hidden" name="ID" value="<?php echo $id; ?>">
 				<div class="mb-3 row">
 					<label for="nf" class="col-sm-2 col-form-label">Nome Farmaco</label>

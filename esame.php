@@ -32,91 +32,366 @@
             $id = $_GET["ID"] ?? '';
             var_dump($_POST);
             if (isset($_POST['subES'])){
-                $tipo = $_POST['tipo'] ?? '';
-                $data = $_POST['dataV'] ?? '';
-                $noteV = $_POST['noteV'] ?? '';
-                
-                $esrval = $_POST['esrval'] ?? '0';
+                try {
+                    // Connessione al database
+                    $dsn = 'mysql:host=localhost;dbname=telemedicine';
+                    $username = 'root';
+                    $password = '9K7OhpsiJF4LnLOy';
+                    $options = array(
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+                    );
 
-                $redbloodcells = $_POST['redbloodcells'] ?? '0';
-                $whitebloodcells = $_POST['whitebloodcells'] ?? '0';
-                $hemoglobin = $_POST['hemoglobin'] ?? '0';
-                $hematocrit = $_POST['hematocrit'] ?? '0';
-                $platelets = $_POST['platelets'] ?? '0';
+                    $pdo = new PDO($dsn, $username, $password, $options);
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-                $crpval = $_POST['crpval'] ?? '0';
-
-                $colore = $_POST['colore'] ?? '';
-                $aspetto = $_POST['aspetto'] ?? '';
-                $ph = $_POST['ph'] ?? '0';
-                $glucosio = $_POST['glucosio'] ?? '0';
-                $proteine = $_POST['proteine'] ?? '0';
-                $emoglobina = $_POST['emoglobina'] ?? '0';
-                $corpichetonici = $_POST['corpichetonici'] ?? '0';
-                $bilirubina = $_POST['bilirubina'] ?? '0';
-                $urobilinogeno = $_POST['urobilinogeno'] ?? '0';
-                $leucociti = $_POST['leucociti'] ?? '0';
-                $creatinina = $_POST['creatinina'] ?? '0';
-
-                $ptval = $_POST['ptval'] ?? '0';
-                $ptEsito = $_POST['ptEsito'] ?? '';
-
-                $tyH = $_POST['tyH'] ?? '0';
-                $tyO = $_POST['tyO'] ?? '0';
-                $patyH = $_POST['patyH'] ?? '0';
-                $patyO = $_POST['patyO'] ?? '0';
-
-                
-                $batval = $_POST['batval'] ?? '0';
-                $batEsito = $_POST['batEsito'] ?? '';
-
-                $hbsval = $_POST['hbsval'] ?? '0';
-                $hbsEsito = $_POST['hbsEsito'] ?? '';
-
-                $hivval = $_POST['hivval'] ?? '0';
-                $hivEsito = $_POST['hivEsito'] ?? '';
-
-                $hcvval = $_POST['hcvval'] ?? '0';
-                $hcvEsito = $_POST['hcvEsito'] ?? '';
-
-                $fbsval = $_POST['fbsval'] ?? '0';
-
-                $bgval = $_POST['bgval'] ?? '0';
-
-                $hpylorival = $_POST['hpylorival'] ?? '0';
-                $hpyloriEsito = $_POST['hpyloriEsito'] ?? '';
-
-                $choval = $_POST['choval'] ?? '0';
-
-                $tgval = $_POST['tgval'] ?? '0';
-
-                $hdlval = $_POST['hdlval'] ?? '0';
-
-                $ldlval = $_POST['ldlval'] ?? '0';
-
-                $vldlval = $_POST['vldlval'] ?? '0';
-
-                $noteV = $_POST['noteV'] ?? '';
-
-                $exams = $_POST['exams'] ?? '';
-                
-                echo "<br>esami->";
-                print_r($exams);
-                if (!(empty($exams))){
-					$ex = join(",", $exams);
-				}
-
-                $sql = "INSERT INTO `esame`(`id_paziente`, `data`, `tipo`, `note`, `ESR`, `redbc`, `whitebc`, `hemoglobin`, `hematocrit`, `platelets`, `CRP`, `colore`, `aspetto`, `ph`, `glucosio`, `proteine`, `emoglobina`, `corpiChetonici`, `bilirubina`, `urobilinogeno`, `leucociti`, `creatinina`, `PT`, `PTval`, `tyH`, `tyO`, `patyH`, `patyO`, `BATval`, `BAT`, `HBS`, `HBSval`, `HIV`, `HIVval`, `HCV`, `HCVval`, `FBS`, `BG`, `HPY`, `HPYval`, `CHO`, `TG`, `HDL`, `LDL`, `VLDL`, `ex`) 
-                    VALUES ('$id','$data','$tipo','$noteV', '$esrval', '$redbloodcells', '$whitebloodcells', '$hemoglobin', '$hematocrit', '$platelets', '$crpval', '$colore', '$aspetto', '$ph', '$glucosio', '$proteine', '$emoglobina', '$corpichetonici', '$bilirubina', '$urobilinogeno', '$leucociti', '$creatinina', '$ptEsito', '$ptval', '$tyH', '$tyO', '$patyH', '$patyO', '$batval', '$batEsito', '$hbsEsito', '$hbsval', '$hivEsito', '$hivval', '$hcvEsito', '$hcvval', '$fbsval', '$bgval', '$hpyloriEsito', '$hpylorival', '$choval', '$tgval', '$hdlval', '$ldlval', '$vldlval', '$ex')";
-
-                if ($conn->query($sql) === TRUE) {
-                    echo "New record created successfully";
-                    $conn->close();
+                    // Variabili PHP
+                    $tipo = $_POST['tipo'] ?? '';
+                    $data = $_POST['dataV'] ?? '';
+                    $noteV = $_POST['noteV'] ?? '';
                     
+                    $esrval = $_POST['esrval'] ?? null;
+
+                    $redbloodcells = $_POST['redbloodcells'] ?? null;
+                    $whitebloodcells = $_POST['whitebloodcells'] ?? null;
+                    $hemoglobin = $_POST['hemoglobin'] ?? null;
+                    $hematocrit = $_POST['hematocrit'] ?? null;
+                    $platelets = $_POST['platelets'] ?? null;
+    
+                    $crpval = $_POST['crpval'] ?? null;
+    
+                    $colore = $_POST['colore'] ?? null;
+                    $aspetto = $_POST['aspetto'] ?? null;
+                    $ph = $_POST['ph'] ?? null;
+                    $glucosio = $_POST['glucosio'] ?? null;
+                    $proteine = $_POST['proteine'] ?? null;
+                    $emoglobina = $_POST['emoglobina'] ?? null;
+                    $corpichetonici = $_POST['corpichetonici'] ?? null;
+                    $bilirubina = $_POST['bilirubina'] ?? null;
+                    $urobilinogeno = $_POST['urobilinogeno'] ?? null;
+                    $leucociti = $_POST['leucociti'] ?? null;
+                    $creatinina = $_POST['creatinina'] ?? null;
+    
+                    $ptval = $_POST['ptval'] ?? null;
+                    $ptEsito = $_POST['ptEsito'] ?? null;
+    
+                    $tyH = $_POST['tyH'] ?? null;
+                    $tyO = $_POST['tyO'] ?? null;
+                    $patyH = $_POST['patyH'] ?? null;
+                    $patyO = $_POST['patyO'] ?? null;
+    
                     
-                } else {
-                    echo "Error: " . $sql . "<br>" . $conn->error;
+                    $batval = $_POST['batval'] ?? null;
+                    $batEsito = $_POST['batEsito'] ?? null;
+    
+                    $hbsval = $_POST['hbsval'] ?? null;
+                    $hbsEsito = $_POST['hbsEsito'] ?? null;
+    
+                    $hivval = $_POST['hivval'] ?? null;
+                    $hivEsito = $_POST['hivEsito'] ?? null;
+    
+                    $hcvval = $_POST['hcvval'] ?? null;
+                    $hcvEsito = $_POST['hcvEsito'] ?? null;
+    
+                    $fbsval = $_POST['fbsval'] ?? null;
+    
+                    $bgval = $_POST['bgval'] ?? null;
+    
+                    $hpylorival = $_POST['hpylorival'] ?? null;
+                    $hpyloriEsito = $_POST['hpyloriEsito'] ?? null;
+    
+                    $choval = $_POST['choval'] ?? null;
+    
+                    $tgval = $_POST['tgval'] ?? null;
+    
+                    $hdlval = $_POST['hdlval'] ?? null;
+    
+                    $ldlval = $_POST['ldlval'] ?? null;
+    
+                    $vldlval = $_POST['vldlval'] ?? null;
+    
+                    $noteV = $_POST['noteV'] ?? null;
+    
+                    $exams = $_POST['exams'] ?? null;
+                    
+                    echo "<br>esami->";
+                    print_r($exams);
+                    if (!(empty($exams))){
+                        $ex = join(",", $exams);
+                    }
+
+                    // Preparazione della query
+                    $sql = "INSERT INTO esame (
+                                id_paziente, data, tipo, note, ESR, redbc, whitebc, hemoglobin, hematocrit, 
+                                platelets, CRP, colore, aspetto, ph, glucosio, proteine, emoglobina, 
+                                corpiChetonici, bilirubina, urobilinogeno, leucociti, creatinina, PT, 
+                                PTval, tyH, tyO, patyH, patyO, BATval, BAT, HBS, HBSval, HIV, HIVval, 
+                                HCV, HCVval, FBS, BG, HPY, HPYval, CHO, TG, HDL, LDL, VLDL, ex
+                            ) VALUES (
+                                :id_paziente, :data, :tipo, :note, :ESR, :redbc, :whitebc, :hemoglobin, :hematocrit, 
+                                :platelets, :CRP, :colore, :aspetto, :ph, :glucosio, :proteine, :emoglobina, 
+                                :corpiChetonici, :bilirubina, :urobilinogeno, :leucociti, :creatinina, :PT, 
+                                :PTval, :tyH, :tyO, :patyH, :patyO, :BATval, :BAT, :HBS, :HBSval, :HIV, :HIVval, 
+                                :HCV, :HCVval, :FBS, :BG, :HPY, :HPYval, :CHO, :TG, :HDL, :LDL, :VLDL, :ex
+                            );";
+                    $stmt = $pdo->prepare($sql);
+
+                    // Bind dei parametri
+                    $stmt->bindParam(':id_paziente', $id, PDO::PARAM_STR);
+                    $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+                    $stmt->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+                    $stmt->bindParam(':note', $noteV, PDO::PARAM_STR);
+                    $stmt->bindParam(':ESR', $esrval, $esrval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':redbc', $redbloodcells, $redbloodcells === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':whitebc', $whitebloodcells, $whitebloodcells === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':hemoglobin', $hemoglobin, $hemoglobin === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':hematocrit', $hematocrit, $hematocrit === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':platelets', $platelets, $platelets === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':CRP', $crpval, $crpval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':colore', $colore, $colore === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':aspetto', $aspetto, $aspetto === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':ph', $ph, $ph === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':glucosio', $glucosio, $glucosio === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':proteine', $proteine, $proteine === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':emoglobina', $emoglobina, $emoglobina === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':corpiChetonici', $corpichetonici, $corpichetonici === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':bilirubina', $bilirubina, $bilirubina === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':urobilinogeno', $urobilinogeno, $urobilinogeno === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':leucociti', $leucociti, $leucociti === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':creatinina', $creatinina, $creatinina === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':PT', $ptEsito, $ptEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':PTval', $ptval, $ptval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':tyH', $tyH, $tyH === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':tyO', $tyO, $tyO === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':patyH', $patyH, $patyH === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':patyO', $patyO, $patyO === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':BATval', $batval, $batval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':BAT', $batEsito, $batEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':HBS', $hbsEsito, $hbsEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':HBSval', $hbsval, $hbsval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':HIV', $hivEsito, $hivEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':HIVval', $hivval, $hivval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':HCV', $hcvEsito, $hcvEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':HCVval', $hcvval, $hcvval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':FBS', $fbsval, $fbsval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':BG', $bgval, $bgval === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':HPY', $hpyloriEsito, $hpyloriEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                    $stmt->bindParam(':HPYval', $hpylorival, $hpylorival === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':CHO', $choval, $choval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':TG', $tgval, $tgval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':HDL', $hdlval, $hdlval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':LDL', $ldlval, $ldlval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':VLDL', $vldlval, $vldlval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                    $stmt->bindParam(':ex', $ex, $ex === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+
+                    // Esecuzione della query
+                    $stmt->execute();
+
+                    echo "Record inserito con successo";
+                } catch (PDOException $e) {
+                    echo "Errore: " . $e->getMessage();
                 }
+            }
+            elseif (isset($_POST['modificaES'])){
+                try {
+                    // Connessione al database
+                    $dsn = 'mysql:host=localhost;dbname=telemedicine';
+                    $username = 'root';
+                    $password = '9K7OhpsiJF4LnLOy';
+                    $options = array(
+                        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+                    );
+
+                    $pdo = new PDO($dsn, $username, $password, $options);
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                    $num_esame = $_POST['modificaES'] ?? '';
+                    // Variabili PHP
+                    $tipo = $_POST['tipo'] ?? '';
+                    $data = $_POST['dataV'] ?? '';
+                    $noteV = $_POST['noteV'] ?? '';
+                    
+                    $esrval = $_POST['esrval'] ?? null;
+
+                    $redbloodcells = $_POST['redbloodcells'] ?? null;
+                    $whitebloodcells = $_POST['whitebloodcells'] ?? null;
+                    $hemoglobin = $_POST['hemoglobin'] ?? null;
+                    $hematocrit = $_POST['hematocrit'] ?? null;
+                    $platelets = $_POST['platelets'] ?? null;
+    
+                    $crpval = $_POST['crpval'] ?? null;
+    
+                    $colore = $_POST['colore'] ?? null;
+                    $aspetto = $_POST['aspetto'] ?? null;
+                    $ph = $_POST['ph'] ?? null;
+                    $glucosio = $_POST['glucosio'] ?? null;
+                    $proteine = $_POST['proteine'] ?? null;
+                    $emoglobina = $_POST['emoglobina'] ?? null;
+                    $corpichetonici = $_POST['corpichetonici'] ?? null;
+                    $bilirubina = $_POST['bilirubina'] ?? null;
+                    $urobilinogeno = $_POST['urobilinogeno'] ?? null;
+                    $leucociti = $_POST['leucociti'] ?? null;
+                    $creatinina = $_POST['creatinina'] ?? null;
+    
+                    $ptval = $_POST['ptval'] ?? null;
+                    $ptEsito = $_POST['ptEsito'] ?? null;
+    
+                    $tyH = $_POST['tyH'] ?? null;
+                    $tyO = $_POST['tyO'] ?? null;
+                    $patyH = $_POST['patyH'] ?? null;
+                    $patyO = $_POST['patyO'] ?? null;
+    
+                    
+                    $batval = $_POST['batval'] ?? null;
+                    $batEsito = $_POST['batEsito'] ?? null;
+    
+                    $hbsval = $_POST['hbsval'] ?? null;
+                    $hbsEsito = $_POST['hbsEsito'] ?? null;
+    
+                    $hivval = $_POST['hivval'] ?? null;
+                    $hivEsito = $_POST['hivEsito'] ?? null;
+    
+                    $hcvval = $_POST['hcvval'] ?? null;
+                    $hcvEsito = $_POST['hcvEsito'] ?? null;
+    
+                    $fbsval = $_POST['fbsval'] ?? null;
+    
+                    $bgval = $_POST['bgval'] ?? null;
+    
+                    $hpylorival = $_POST['hpylorival'] ?? null;
+                    $hpyloriEsito = $_POST['hpyloriEsito'] ?? null;
+    
+                    $choval = $_POST['choval'] ?? null;
+    
+                    $tgval = $_POST['tgval'] ?? null;
+    
+                    $hdlval = $_POST['hdlval'] ?? null;
+    
+                    $ldlval = $_POST['ldlval'] ?? null;
+    
+                    $vldlval = $_POST['vldlval'] ?? null;
+    
+                    $noteV = $_POST['noteV'] ?? null;
+    
+                    $exams = $_POST['exams'] ?? null;
+                    
+                    echo "<br>esami->";
+                    print_r($exams);
+                    if (!(empty($exams))){
+                        $ex = join(",", $exams);
+                    }
+
+                    // Preparazione della query
+                    $sql = "UPDATE esame 
+                        SET 
+                            id_paziente = :id_paziente, 
+                            data = :data, 
+                            tipo = :tipo, 
+                            note = :note, 
+                            ESR = :ESR, 
+                            redbc = :redbc, 
+                            whitebc = :whitebc, 
+                            hemoglobin = :hemoglobin, 
+                            hematocrit = :hematocrit, 
+                            platelets = :platelets, 
+                            CRP = :CRP, 
+                            colore = :colore, 
+                            aspetto = :aspetto, 
+                            ph = :ph, 
+                            glucosio = :glucosio, 
+                            proteine = :proteine, 
+                            emoglobina = :emoglobina, 
+                            corpiChetonici = :corpiChetonici, 
+                            bilirubina = :bilirubina, 
+                            urobilinogeno = :urobilinogeno, 
+                            leucociti = :leucociti, 
+                            creatinina = :creatinina, 
+                            PT = :PT, 
+                            PTval = :PTval, 
+                            tyH = :tyH, 
+                            tyO = :tyO, 
+                            patyH = :patyH, 
+                            patyO = :patyO, 
+                            BATval = :BATval, 
+                            BAT = :BAT, 
+                            HBS = :HBS, 
+                            HBSval = :HBSval, 
+                            HIV = :HIV, 
+                            HIVval = :HIVval, 
+                            HCV = :HCV, 
+                            HCVval = :HCVval, 
+                            FBS = :FBS, 
+                            BG = :BG, 
+                            HPY = :HPY, 
+                            HPYval = :HPYval, 
+                            CHO = :CHO, 
+                            TG = :TG, 
+                            HDL = :HDL, 
+                            LDL = :LDL, 
+                            VLDL = :VLDL, 
+                            ex = :ex 
+                        WHERE 
+                            num_esame = :num_esame";
+                
+                $stmt = $pdo->prepare($sql);
+
+                // Bind dei parametri
+                $stmt->bindParam(':id_paziente', $id, PDO::PARAM_STR);
+                $stmt->bindParam(':data', $data, PDO::PARAM_STR);
+                $stmt->bindParam(':tipo', $tipo, PDO::PARAM_STR);
+                $stmt->bindParam(':note', $noteV, PDO::PARAM_STR);
+                $stmt->bindParam(':ESR', $esrval, $esrval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':redbc', $redbloodcells, $redbloodcells === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':whitebc', $whitebloodcells, $whitebloodcells === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':hemoglobin', $hemoglobin, $hemoglobin === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':hematocrit', $hematocrit, $hematocrit === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':platelets', $platelets, $platelets === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':CRP', $crpval, $crpval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':colore', $colore, $colore === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':aspetto', $aspetto, $aspetto === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':ph', $ph, $ph === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':glucosio', $glucosio, $glucosio === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':proteine', $proteine, $proteine === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':emoglobina', $emoglobina, $emoglobina === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':corpiChetonici', $corpichetonici, $corpichetonici === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':bilirubina', $bilirubina, $bilirubina === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':urobilinogeno', $urobilinogeno, $urobilinogeno === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':leucociti', $leucociti, $leucociti === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':creatinina', $creatinina, $creatinina === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':PT', $ptEsito, $ptEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':PTval', $ptval, $ptval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':tyH', $tyH, $tyH === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':tyO', $tyO, $tyO === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':patyH', $patyH, $patyH === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':patyO', $patyO, $patyO === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':BATval', $batval, $batval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':BAT', $batEsito, $batEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':HBS', $hbsEsito, $hbsEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':HBSval', $hbsval, $hbsval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':HIV', $hivEsito, $hivEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':HIVval', $hivval, $hivval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':HCV', $hcvEsito, $hcvEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':HCVval', $hcvval, $hcvval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':FBS', $fbsval, $fbsval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':BG', $bgval, $bgval === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':HPY', $hpyloriEsito, $hpyloriEsito === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':HPYval', $hpylorival, $hpylorival === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':CHO', $choval, $choval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':TG', $tgval, $tgval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':HDL', $hdlval, $hdlval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':LDL', $ldlval, $ldlval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':VLDL', $vldlval, $vldlval === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+                $stmt->bindParam(':ex', $ex, $ex === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+                $stmt->bindParam(':num_esame', $num_esame, PDO::PARAM_INT);
+
+                // Esecuzione della query
+                $stmt->execute();
+
+                    echo "Record inserito con successo";
+                } catch (PDOException $e) {
+                    echo "Errore: " . $e->getMessage();
+                }
+                
             }
             elseif (isset($_POST['subFile'])){
                 $tipo = $_POST['tipo'] ?? '';

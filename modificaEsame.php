@@ -14,6 +14,95 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+<?php
+            require_once('db.php');
+            var_dump($_POST);
+            $num = $_POST['modificaE'];
+            
+            $sql = "SELECT * FROM `esame` WHERE `num_esame` = $num";
+            
+            $res = $conn->query($sql);
+            $row = $res->fetch_assoc();
+
+
+            $id = $row['id_paziente'];
+            $tipo = $row['tipo'];
+            $data = $row['data'];
+
+            
+            $noteV = $row["note"] ?? '';
+            $file_str = $row["filePath"] ?? '';
+            $name_str = $row["fileName"] ?? '';
+            $ex = $row["ex"] ?? '';
+            $file_ar = explode(";",$file_str) ?? '';
+            $name_ar = explode(";",$name_str) ?? '';
+            $exams = explode(",", $ex) ?? '';
+
+
+
+            $esrval = $row['ESR'] ?? '0';
+
+            $redbloodcells = $row['redbc'] ?? '0';
+            $whitebloodcells = $row['whitebc'] ?? '0';
+            $hemoglobin = $row['hemoglobin'] ?? '0';
+            $hematocrit = $row['hematocrit'] ?? '0';
+            $platelets = $row['platelets'] ?? '0';
+
+            $crpval = $row['CRP'] ?? '0';
+
+            $colore = $row['colore'] ?? '';
+            $aspetto = $row['aspetto'] ?? '';
+            $ph = $row['ph'] ?? '0';
+            $glucosio = $row['glucosio'] ?? '0';
+            $proteine = $row['proteine'] ?? '0';
+            $emoglobina = $row['emoglobina'] ?? '0';
+            $corpichetonici = $row['corpiChetonici'] ?? '0';
+            $bilirubina = $row['bilirubina'] ?? '0';
+            $urobilinogeno = $row['urobilinogeno'] ?? '0';
+            $leucociti = $row['leucociti'] ?? '0';
+            $creatinina = $row['creatinina'] ?? '0';
+
+            $ptval = $row['PTval'] ?? '0';
+            $ptEsito = $row['PT'] ?? '';
+
+            $tyH = $row['tyH'] ?? '0';
+            $tyO = $row['tyO'] ?? '0';
+            $patyH = $row['patyH'] ?? '0';
+            $patyO = $row['patyO'] ?? '0';
+
+            $batval = $row['BATval'] ?? '0';
+            $batEsito = $row['BAT'] ?? '';
+
+            $hbsval = $row['HBSval'] ?? '0';
+            $hbsEsito = $row['HBS'] ?? '';
+
+            $hivval = $row['HIVval'] ?? '0';
+            $hivEsito = $row['HIV'] ?? '';
+
+            $hcvval = $row['HCVval'] ?? '0';
+            $hcvEsito = $row['HCV'] ?? '';
+
+            $fbsval = $row['FBS'] ?? '0';
+
+            $bgval = $row['BG'] ?? '0';
+
+            $hpylorival = $row['HPYval'] ?? '0';
+            $hpyloriEsito = $row['HPY'] ?? '';
+
+            $choval = $row['CHO'] ?? '0';
+
+            $tgval = $row['TG'] ?? '0';
+
+            $hdlval = $row['HDL'] ?? '0';
+
+            $ldlval = $row['LDL'] ?? '0';
+
+            $vldlval = $row['VLDL'] ?? '0';
+
+
+            $total_count = count($file_ar) ??  0;
+            
+        ?>
 
         <script>
             esDisp = false;
@@ -35,13 +124,15 @@
             ldDisp = false;
             vlDisp = false;
 
+            
+
             function setEsame(val) {
                 if(val == 'el'){
                     strEs = "'addE'";
                     document.getElementById("el").innerHTML = '<div class="mb-3 row">\
                         <label for="dataV" class="col-sm-2 col-form-label">Data visita</label>\
                         <div class="col-sm-10">\
-                            <input type="date" class="form-control" id="dataV" name="dataV" required>\
+                            <input type="date" class="form-control" id="dataV" name="dataV" value="<?php echo $data; ?>" required>\
                         </div>\
                     </div>\
                     <div class="mb-3 row">\
@@ -95,10 +186,10 @@
                     <div class="mb-3 row">\
                         <div class="input-group">\
                             <span class="input-group-text">Note</span>\
-                            <textarea class="form-control" name="noteV" aria-label="With textarea" rows="10" style="height:100%;"></textarea>\
+                            <textarea class="form-control" name="noteV" aria-label="With textarea" rows="10" style="height:100%;"><?php echo $noteV;?></textarea>\
                         </div>\
                     </div>\
-                    <input type="submit" class="btn btn-primary btn-lg" name="subES">';
+                    <input type="submit" class="btn btn-primary btn-lg" name="modificaES" value="<?php echo $num;?>">';
                 }
                 else{
                     document.getElementById("el").innerHTML = '';
@@ -120,7 +211,7 @@
                     <div class="mb-3 row">\
                         <div class="input-group">\
                             <span class="input-group-text">Note</span>\
-                            <textarea class="form-control" name="noteV" aria-label="With textarea" rows="10" style="height:100%;"></textarea>\
+                            <textarea class="form-control" name="noteV" aria-label="With textarea" rows="10" style="height:100%;"><?php echo $note; ?></textarea>\
                         </div>\
                     </div>\
                     <input type="submit" class="btn btn-primary btn-lg" name="subFile">';
@@ -146,7 +237,7 @@
                             <div class="mb-3 row">\
                                 <label for="esrval" class="col-sm-3 col-form-label">Erythrocyte Sedimentation Rate</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="esrval" name="esrval" required>\
+                                    <input type="number" class="form-control" id="esrval" name="esrval" value="<?php echo $esrval; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -165,31 +256,31 @@
                             <div class="mb-3 row">\
                                 <label for="redbloodcells" class="col-sm-3 col-form-label">Red blood cells</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="redbloodcells" name="redbloodcells" required>\
+                                    <input type="number" class="form-control" id="redbloodcells" name="redbloodcells" value="<?php echo $redbloodcells; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="whitebloodcells" class="col-sm-3 col-form-label">White blood cells</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="whitebloodcells" name="whitebloodcells" required>\
+                                    <input type="number" class="form-control" id="whitebloodcells" name="whitebloodcells" value="<?php echo $whitebloodcells; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="hemoglobin" class="col-sm-3 col-form-label">Hemoglobin</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="hemoglobin" name="hemoglobin" required>\
+                                    <input type="number" class="form-control" id="hemoglobin" name="hemoglobin" value="<?php echo $hemoglobin; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="hematocrit" class="col-sm-3 col-form-label">Hematocrit</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="hematocrit" name="hematocrit" required>\
+                                    <input type="number" class="form-control" id="hematocrit" name="hematocrit" value="<?php echo $hematocrit; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="platelets" class="col-sm-3 col-form-label">Platelets</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="platelets" name="platelets" required>\
+                                    <input type="number" class="form-control" id="platelets" name="platelets" value="<?php echo $platelets; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -208,7 +299,7 @@
                             <div class="mb-3 row">\
                                 <label for="crpval" class="col-sm-3 col-form-label">C~ Reactive Protein</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="crpval" name="crpval" required>\
+                                    <input type="number" class="form-control" id="crpval" name="crpval" value="<?php echo $crpval; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -233,101 +324,101 @@
                             <div class="mb-3 row">\
                                 <label for="colore" class="col-sm-3 col-form-label">Colore</label>\
                                 <div class="col-sm-8">\
-                                    <input type="text" class="form-control" id="colore" name="colore" required>\
+                                    <input type="text" class="form-control" id="colore" name="colore" value="<?php echo $colore; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="aspetto" class="col-sm-3 col-form-label">Aspetto</label>\
                                 <div class="col-sm-8">\
-                                    <input type="text" class="form-control" id="aspetto" name="aspetto" required>\
+                                    <input type="text" class="form-control" id="aspetto" name="aspetto" value="<?php echo $aspetto; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="ph" class="col-sm-3 col-form-label">pH</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="ph" name="ph" required>\
+                                    <input type="number" class="form-control" id="ph" name="ph" value="<?php echo $ph; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="glucosio" class="col-sm-3 col-form-label">Glucosio</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="glucosio" name="glucosio" required>\
+                                    <input type="number" class="form-control" id="glucosio" name="glucosio" value="<?php echo $glucosio; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="proteine" class="col-sm-3 col-form-label">Proteine</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="proteine" name="proteine" required>\
+                                    <input type="number" class="form-control" id="proteine" name="proteine" value="<?php echo $proteine; ?>" required>\
                                 </div>\
                             </div>\
                             \
                             <div class="mb-3 row">\
                                 <label for="emoglobina" class="col-sm-3 col-form-label">Emoglobina</label>\
                                 <div class="col-sm-1" style="margin-left: 3%">\
-                                    <input class="form-check-input" type="radio" name="emoglobina" id="emoglobinaVal" value="si" onchange="showElement('+strE+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="emoglobina" id="emoglobinaVal" value="si" onchange="showElement('+strE+', this.value);" required <?php if($emoglobina != null) echo "checked" ?>>\
                                     <label class="form-check-label" for="emoglobina">Si</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="emoglobina" id="emoglobinaVal" value="no" onchange="showElement('+strE+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="emoglobina" id="emoglobinaVal" value="no" onchange="showElement('+strE+', this.value);" required <?php if($emoglobina == null) echo "checked" ?>>\
                                     <label class="form-check-label" for="emoglobina">No</label>\
                                 </div>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" name="emoglobina" id="emoglobina" placeholder="Emoglobina" style="display: none;"/>\
+                                    <input type="number" class="form-control" name="emoglobina" id="emoglobina" placeholder="Emoglobina" style="display: none;" value="<?php echo $emoglobina; ?>"/>\
                                 </div>\
                             </div>\
                             \
                             <div class="mb-3 row">\
                                 <label for="corpichetonici" class="col-sm-3 col-form-label">Corpi chetonici</label>\
                                 <div class="col-sm-1" style="margin-left: 3%">\
-                                    <input class="form-check-input" type="radio" name="corpichetonici" id="corpichetoniciVal" value="si" onchange="showElement('+strC+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="corpichetonici" id="corpichetoniciVal" value="si" onchange="showElement('+strC+', this.value);" required <?php if($corpichetonici != null) echo "checked" ?>>\
                                     <label class="form-check-label" for="corpichetonici">Si</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="corpichetonici" id="corpichetoniciVal" value="no" onchange="showElement('+strC+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="corpichetonici" id="corpichetoniciVal" value="no" onchange="showElement('+strC+', this.value);" required <?php if($corpichetonici == null) echo "checked" ?>>\
                                     <label class="form-check-label" for="corpichetonici">No</label>\
                                 </div>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" name="corpichetonici" id="corpichetonici" placeholder="Corpi chetonici" style="display: none;"/>\
+                                    <input type="number" class="form-control" name="corpichetonici" id="corpichetonici" placeholder="Corpi chetonici" style="display: none;" value="<?php echo $corpichetonici; ?>"/>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="bilirubina" class="col-sm-3 col-form-label">Bilirubina</label>\
                                 <div class="col-sm-1" style="margin-left: 3%">\
-                                    <input class="form-check-input" type="radio" name="bilirubina" id="bilirubinaVal" value="si" onchange="showElement('+strB+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="bilirubina" id="bilirubinaVal" value="si" onchange="showElement('+strB+', this.value);" required <?php if($bilirubina != null) echo "checked" ?>>\
                                     <label class="form-check-label" for="bilirubina">Si</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="bilirubina" id="bilirubinaVal" value="no" onchange="showElement('+strB+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="bilirubina" id="bilirubinaVal" value="no" onchange="showElement('+strB+', this.value);" required <?php if($bilirubina == null) echo "checked" ?>>\
                                     <label class="form-check-label" for="bilirubina">No</label>\
                                 </div>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" name="bilirubina" id="bilirubina" placeholder="Bilirubina" style="display: none;"/>\
+                                    <input type="number" class="form-control" name="bilirubina" id="bilirubina" placeholder="Bilirubina" style="display: none;" value="<?php echo $bilirubina; ?>"/>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="urobilinogeno" class="col-sm-3 col-form-label">Urobilinogeno</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="urobilinogeno" name="urobilinogeno" required>\
+                                    <input type="number" class="form-control" id="urobilinogeno" name="urobilinogeno" value="<?php echo $urobilinogeno; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="leucociti" class="col-sm-3 col-form-label">Leucociti</label>\
                                 <div class="col-sm-1" style="margin-left: 3%">\
-                                    <input class="form-check-input" type="radio" name="leucociti" id="leucocitiVal" value="si" onchange="showElement('+strL+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="leucociti" id="leucocitiVal" value="si" onchange="showElement('+strL+', this.value);" required <?php if($leucociti != null) echo "checked" ?>>\
                                     <label class="form-check-label" for="leucociti">Si</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="leucociti" id="leucocitiVal" value="no" onchange="showElement('+strL+', this.value);" required>\
+                                    <input class="form-check-input" type="radio" name="leucociti" id="leucocitiVal" value="no" onchange="showElement('+strL+', this.value);" required <?php if($leucociti == null) echo "checked" ?>>\
                                     <label class="form-check-label" for="leucociti">No</label>\
                                 </div>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" name="leucociti" id="leucociti" placeholder="Leucociti" style="display: none;"/>\
+                                    <input type="number" class="form-control" name="leucociti" id="leucociti" placeholder="Leucociti" style="display: none;" value="<?php echo $leucociti; ?>"/>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="creatinina" class="col-sm-3 col-form-label">Creatinina</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="creatinina" name="creatinina" required>\
+                                    <input type="number" class="form-control" id="creatinina" name="creatinina" value="<?php echo $creatinina; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -346,16 +437,16 @@
                             <div class="mb-3 row">\
                                 <label for="ptval" class="col-sm-3 col-form-label">Pregnant Test</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="ptval" name="ptval" required>\
+                                    <input type="number" class="form-control" id="ptval" name="ptval" value="<?php echo $ptval; ?>" required>\
                                 </div>\
                                 <div class="col-sm-1">\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="ptEsito" value="Positivo" required>\
+                                    <input class="form-check-input" type="radio" name="ptEsito" value="Positivo" required <?php if($ptEsito == 'Positivo') echo "checked" ?>>\
                                     <label class="form-check-label" for="ptEsito">Positivo</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="ptEsito" value="Negativo" required>\
+                                    <input class="form-check-input" type="radio" name="ptEsito" value="Negativo" required <?php if($ptEsito == 'Negativo') echo "checked" ?>>\
                                     <label class="form-check-label" for="ptEsito">Negativo</label>\
                                 </div>\
                             </div>';
@@ -375,25 +466,25 @@
                             <div class="mb-3 row">\
                                 <label for="tyH" class="col-sm-3 col-form-label">Typhi H</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="tyH" name="tyH" placeholder="Typhi H" required>\
+                                    <input type="number" class="form-control" id="tyH" name="tyH" placeholder="Typhi H" value="<?php echo $tyH; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="tyO" class="col-sm-3 col-form-label">Typhi O</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="tyO" name="tyO" placeholder="Typhi O" required>\
+                                    <input type="number" class="form-control" id="tyO" name="tyO" placeholder="Typhi O" value="<?php echo $tyO; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="patyH" class="col-sm-3 col-form-label">Para Typhi BH</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="patyH" name="patyH" placeholder="Para Typhi BH" required>\
+                                    <input type="number" class="form-control" id="patyH" name="patyH" placeholder="Para Typhi BH" value="<?php echo $patyH; ?>" required>\
                                 </div>\
                             </div>\
                             <div class="mb-3 row">\
                                 <label for="patyO" class="col-sm-3 col-form-label">Para Typhi BO</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="patyO" name="patyO" placeholder="Para Typhi BO" required>\
+                                    <input type="number" class="form-control" id="patyO" name="patyO" placeholder="Para Typhi BO" value="<?php echo $patyO; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -412,16 +503,16 @@
                             <div class="mb-3 row">\
                                 <label for="batval" class="col-sm-3 col-form-label">Brucella Agglutination Test</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="batval" name="batval" required>\
+                                    <input type="number" class="form-control" id="batval" name="batval" value="<?php echo $batval; ?>" required>\
                                 </div>\
                                 <div class="col-sm-1">\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="batEsito" id="batEsito" value="Positivo" required>\
+                                    <input class="form-check-input" type="radio" name="batEsito" id="batEsito" value="Positivo" required <?php if($batEsito == 'Positivo') echo "checked" ?>>\
                                     <label class="form-check-label" for="batEsito">Positivo</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="batEsito" id="batEsito" value="Negativo" required>\
+                                    <input class="form-check-input" type="radio" name="batEsito" id="batEsito" value="Negativo" required <?php if($batEsito == 'Negativo') echo "checked" ?>>\
                                     <label class="form-check-label" for="batEsito">Negativo</label>\
                                 </div>\
                             </div>';
@@ -441,16 +532,16 @@
                             <div class="mb-3 row">\
                                 <label for="hbsval" class="col-sm-3 col-form-label">Hepatitis B</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="hbsval" name="hbsval" required>\
+                                    <input type="number" class="form-control" id="hbsval" name="hbsval" value="<?php echo $hbsval; ?>" required>\
                                 </div>\
                                 <div class="col-sm-1">\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hbsEsito" id="hbsEsito" value="Positivo" required>\
+                                    <input class="form-check-input" type="radio" name="hbsEsito" id="hbsEsito" value="Positivo" required <?php if($hbsEsito == 'Positivo') echo "checked" ?>>\
                                     <label class="form-check-label" for="hbsEsito">Positivo</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hbsEsito" id="hbsEsito" value="Negativo" required>\
+                                    <input class="form-check-input" type="radio" name="hbsEsito" id="hbsEsito" value="Negativo" required <?php if($hbsEsito == 'Negativo') echo "checked" ?>>\
                                     <label class="form-check-label" for="hbsEsito">Negativo</label>\
                                 </div>\
                             </div>';
@@ -470,16 +561,16 @@
                             <div class="mb-3 row">\
                                 <label for="hivval" class="col-sm-3 col-form-label">Human immune deficiency virus</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="hivval" name="hivval" required>\
+                                    <input type="number" class="form-control" id="hivval" name="hivval" value="<?php echo $hivval; ?>" required>\
                                 </div>\
                                 <div class="col-sm-1">\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hivEsito" id="hivEsito" value="Positivo" required>\
+                                    <input class="form-check-input" type="radio" name="hivEsito" id="hivEsito" value="Positivo" required <?php if($hivEsito == 'Positivo') echo "checked" ?>>\
                                     <label class="form-check-label" for="hivEsito">Positivo</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hivEsito" id="hivEsito" value="Negativo" required>\
+                                    <input class="form-check-input" type="radio" name="hivEsito" id="hivEsito" value="Negativo" required <?php if($hivEsito == 'Negativo') echo "checked" ?>>\
                                     <label class="form-check-label" for="hivEsito">Negativo</label>\
                                 </div>\
                             </div>';
@@ -499,16 +590,16 @@
                             <div class="mb-3 row">\
                                 <label for="hcvval" class="col-sm-3 col-form-label">Hepatitis C</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="hcvval" name="hcvval" required>\
+                                    <input type="number" class="form-control" id="hcvval" name="hcvval" value="<?php echo $hcvval; ?>" required>\
                                 </div>\
                                 <div class="col-sm-1">\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hcvEsito" id="hcvEsito" value="Positivo" required>\
+                                    <input class="form-check-input" type="radio" name="hcvEsito" id="hcvEsito" value="Positivo" required <?php if($hcvEsito == 'Positivo') echo "checked" ?>>\
                                     <label class="form-check-label" for="pthcvEsitoEsito">Positivo</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hcvEsito" id="hcvEsito" value="Negativo" required>\
+                                    <input class="form-check-input" type="radio" name="hcvEsito" id="hcvEsito" value="Negativo" required <?php if($hcvEsito == 'Negativo') echo "checked" ?>>\
                                     <label class="form-check-label" for="hcvEsito">Negativo</label>\
                                 </div>\
                             </div>';
@@ -528,7 +619,7 @@
                             <div class="mb-3 row">\
                                 <label for="fbsval" class="col-sm-3 col-form-label">Fasting Blood Sugar</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="fbsval" name="fbsval" required>\
+                                    <input type="number" class="form-control" id="fbsval" name="fbsval" value="<?php echo $fbsval; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -549,14 +640,14 @@
                                 <div class="col-sm-8">\
                                     <select class="form-select" name="bgval" id="bgval" required>\
                                         <option value="">- select -</option>\
-                                        <option value="A+">A+</option>\
-                                        <option value="A-">A-</option>\
-                                        <option value="B+">B+</option>\
-                                        <option value="B-">B-</option>\
-                                        <option value="AB+">AB+</option>\
-                                        <option value="AB-">AB-</option>\
-                                        <option value="0+">0+</option>\
-                                        <option value="0-">0-</option>\
+                                        <option value="A+" <?php if($bgval == "A+") {echo "selected";} ?>>A+</option>\
+                                        <option value="A-" <?php if($bgval == "A-") {echo "selected";} ?>>A-</option>\
+                                        <option value="B+" <?php if($bgval == "B+") {echo "selected";} ?>>B+</option>\
+                                        <option value="B-" <?php if($bgval == "B-") {echo "selected";} ?>>B-</option>\
+                                        <option value="AB+" <?php if($bgval == "AB+") {echo "selected";} ?>>AB+</option>\
+                                        <option value="AB-" <?php if($bgval == "AB-") {echo "selected";} ?>>AB-</option>\
+                                        <option value="0+" <?php if($bgval == "0+") {echo "selected";} ?>>0+</option>\
+                                        <option value="0-" <?php if($bgval == "0-") {echo "selected";} ?>>0-</option>\
                                     </select>\
                                 </div>\
                             </div>';
@@ -576,16 +667,16 @@
                             <div class="mb-3 row">\
                                 <label for="hpylorival" class="col-sm-3 col-form-label">Helicobacter Pylori</label>\
                                 <div class="col-sm-5">\
-                                    <input type="number" class="form-control" id="hpylorival" name="hpylorival" required>\
+                                    <input type="number" class="form-control" id="hpylorival" name="hpylorival" value="<?php echo $hpylorival; ?>" required>\
                                 </div>\
                                 <div class="col-sm-1">\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hpyloriEsito" id="hpyloriEsito" value="Positivo" required>\
+                                    <input class="form-check-input" type="radio" name="hpyloriEsito" id="hpyloriEsito" value="Positivo" required <?php if($hpyloriEsito == 'Positivo') echo "checked" ?>>\
                                     <label class="form-check-label" for="hpyloriEsito">Positivo</label>\
                                 </div>\
                                 <div class="col-sm-1">\
-                                    <input class="form-check-input" type="radio" name="hpyloriEsito" id="hpyloriEsito" value="Negativo" required>\
+                                    <input class="form-check-input" type="radio" name="hpyloriEsito" id="hpyloriEsito" value="Negativo" required <?php if($hpyloriEsito == 'Negativo') echo "checked" ?>>\
                                     <label class="form-check-label" for="hpyloriEsito">Negativo</label>\
                                 </div>\
                             </div>';
@@ -605,7 +696,7 @@
                             <div class="mb-3 row">\
                                 <label for="choval" class="col-sm-3 col-form-label">Changes in plasma levels of cholesterol</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="choval" name="choval" required>\
+                                    <input type="number" class="form-control" id="choval" name="choval" value="<?php echo $choval; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -624,7 +715,7 @@
                             <div class="mb-3 row">\
                                 <label for="tgval" class="col-sm-3 col-form-label">triglyceride</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="tgval" name="tgval" required>\
+                                    <input type="number" class="form-control" id="tgval" name="tgval" value="<?php echo $tgval; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -643,7 +734,7 @@
                             <div class="mb-3 row">\
                                 <label for="hdlval" class="col-sm-3 col-form-label">high density lipoprotein</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="hdlval" name="hdlval" required>\
+                                    <input type="number" class="form-control" id="hdlval" name="hdlval" value="<?php echo $hdlval; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -662,7 +753,7 @@
                             <div class="mb-3 row">\
                                 <label for="ldlval" class="col-sm-3 col-form-label">low density lipoprotein</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="ldlval" name="ldlval" required>\
+                                    <input type="number" class="form-control" id="ldlval" name="ldlval" value="<?php echo $ldlval; ?>" required>\
                                 </div>\
                             </div>';
                     }
@@ -681,12 +772,14 @@
                             <div class="mb-3 row">\
                                 <label for="vldlval" class="col-sm-3 col-form-label">very low density lipoprotein</label>\
                                 <div class="col-sm-8">\
-                                    <input type="number" class="form-control" id="vldlval" name="vldlval" required>\
+                                    <input type="number" class="form-control" id="vldlval" name="vldlval" value="<?php echo $vldlval; ?>" required>\
                                 </div>\
                             </div>';
                     }
                 }
             }
+
+            
 
             function remove(val){
                 if(val == 'esr'){
@@ -764,6 +857,8 @@
                 
             }
 
+            
+
             function showElement(idElement, val){
                 if(val == 'si'){
                     document.getElementById(idElement).style.display = 'block';
@@ -775,99 +870,36 @@
                 }
             }
 
+            window.onload = function() {
+                var tipo = "<?php echo $tipo; ?>";
+                setEsame(tipo);
+                var exams = <?php echo json_encode($exams); ?>;
+                for (var i = 0; i < exams.length; i++){
+                    setEsLab(exams[i]);
+                }
+                var emoglobina = "<?php echo $emoglobina; ?>";
+                var corpichetonici = "<?php echo $corpichetonici; ?>";
+                var bilirubina = "<?php echo $bilirubina; ?>";
+                var leucociti = "<?php echo $leucociti; ?>";
+                if(emoglobina != null){
+                    showElement('emoglobina', 'si');
+                }
+                if(corpichetonici != null){
+                    showElement('corpichetonici', 'si');
+                }
+                if(bilirubina != null){
+                    showElement('bilirubina', 'si');
+                }
+                if(leucociti != null){
+                    showElement('leucociti', 'si');
+                }
+            }
+
 
         </script>
     </head>
     <body>
-        <?php
-            var_dump($_POST);
-            $num = $_POST['modificaE'];
-
-            $sql = "SELECT * FROM esame WHERE ID = $num";
-            $result = $conn->query($sql);
-            $row = $result->fetch_assoc();
-
-            $id = $row['id_paziente'];
-            $tipo = $row['tipo'];
-            $data = $row['data'];
-
-            
-            $noteV = $row["note"] ?? '';
-            $file_str = $row["filePath"] ?? '';
-            $name_str = $row["fileName"] ?? '';
-            $ex = $row["ex"] ?? '';
-            $file_ar = explode(";",$file_str) ?? '';
-            $name_ar = explode(";",$name_str) ?? '';
-            $exams = explode(",", $ex) ?? '';
-
-
-
-            $esrval = $row['ESR'] ?? '0';
-
-            $redbloodcells = $row['redbc'] ?? '0';
-            $whitebloodcells = $row['whitebc'] ?? '0';
-            $hemoglobin = $row['hemoglobin'] ?? '0';
-            $hematocrit = $row['hematocrit'] ?? '0';
-            $platelets = $row['platelets'] ?? '0';
-
-            $crpval = $row['CRP'] ?? '0';
-
-            $colore = $row['colore'] ?? '';
-            $aspetto = $row['aspetto'] ?? '';
-            $ph = $row['ph'] ?? '0';
-            $glucosio = $row['glucosio'] ?? '0';
-            $proteine = $row['proteine'] ?? '0';
-            $emoglobina = $row['emoglobina'] ?? '0';
-            $corpichetonici = $row['corpiChetonici'] ?? '0';
-            $bilirubina = $row['bilirubina'] ?? '0';
-            $urobilinogeno = $row['urobilinogeno'] ?? '0';
-            $leucociti = $row['leucociti'] ?? '0';
-            $creatinina = $row['creatinina'] ?? '0';
-
-            $ptval = $row['PTval'] ?? '0';
-            $ptEsito = $row['PT'] ?? '';
-
-            $tyH = $row['tyH'] ?? '0';
-            $tyO = $row['tyO'] ?? '0';
-            $patyH = $row['patyH'] ?? '0';
-            $patyO = $row['patyO'] ?? '0';
-
-            $batval = $row['BATval'] ?? '0';
-            $batEsito = $row['BAT'] ?? '';
-
-            $hbsval = $row['HBSval'] ?? '0';
-            $hbsEsito = $row['HBS'] ?? '';
-
-            $hivval = $row['HIVval'] ?? '0';
-            $hivEsito = $row['HIV'] ?? '';
-
-            $hcvval = $row['HCVval'] ?? '0';
-            $hcvEsito = $row['HCV'] ?? '';
-
-            $fbsval = $row['FBS'] ?? '0';
-
-            $bgval = $row['BG'] ?? '0';
-
-            $hpylorival = $row['HPYval'] ?? '0';
-            $hpyloriEsito = $row['HPY'] ?? '';
-
-            $choval = $row['CHO'] ?? '0';
-
-            $tgval = $row['TG'] ?? '0';
-
-            $hdlval = $row['HDL'] ?? '0';
-
-            $ldlval = $row['LDL'] ?? '0';
-
-            $vldlval = $row['VLDL'] ?? '0';
-
-
-
-
-            
-            $total_count = count($file_ar) ??  0;
-
-        ?>
+        
 
         <nav class="navbar fixed-top navbar-expand-lg bg-primary">
             <div class="container-fluid">
@@ -897,12 +929,12 @@
                     <div class="col-sm-10">
                         <select class="form-select" name="tipo" id="tipo" onchange='setEsame(this.value)'>
                             <option>- select -</option>
-                            <option value="el">Esame Laboratorio</option>
-                            <option value="ecg">Elettrocardiogramma</option>
-                            <option value="rg">Radiografie</option>
-                            <option value="eg">Ecografia</option>
-                            <option value="tac">TAC</option>
-                            <option value="rm">Risonanza Magnetica</option>
+                            <option value="el" <?php if($tipo == "el") echo "selected";?>>Esame Laboratorio</option>
+                            <option value="ecg" <?php if($tipo == "ecg") echo "selected";?>>Elettrocardiogramma</option>
+                            <option value="rg" <?php if($tipo == "rg") echo "selected";?>>Radiografie</option>
+                            <option value="eg" <?php if($tipo == "eg") echo "selected";?>>Ecografia</option>
+                            <option value="tac" <?php if($tipo == "tac") echo "selected";?>>TAC</option>
+                            <option value="rm" <?php if($tipo == "rm") echo "selected";?>>Risonanza Magnetica</option>
                         </select>
                     </div>
                 </div>
@@ -913,6 +945,9 @@
                 <div id="esLab"></div>
 
             </form>
+
+            <br>
+
         </div>
     </body>
 </html>
