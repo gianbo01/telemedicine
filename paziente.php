@@ -23,6 +23,7 @@
                 $session_user = htmlspecialchars($_SESSION['session_user'], ENT_QUOTES, 'UTF-8');
                 $session_id = htmlspecialchars($_SESSION['session_id']);
                 $session_role = htmlspecialchars($_SESSION['session_role']);
+                $session_lang = htmlspecialchars($_SESSION['session_lang']);
             } else {
                 header('Location: /');
             }
@@ -143,9 +144,29 @@
 	</head>
 
 	<body>
-
 		<?php
 			require_once('db.php');
+
+
+			$_SESSION['session_lang'] = $_GET["lang"] ?? $session_lang;     // assegno la lingua alla var di sessione se il valore passato con il GET altrimenti riassegno se stessa 
+            $L = htmlspecialchars($_SESSION['session_lang']);               // variabile di appoggio
+            
+            $sqlL = "SELECT * FROM vocpaziente AS g WHERE g.lingua = '$L' UNION ALL SELECT * FROM vocaddricetta AS gx WHERE gx.lingua = '$L' UNION ALL SELECT * FROM vocaddesame AS gz WHERE gz.lingua = '$L' UNION ALL SELECT * FROM guihome AS gh WHERE gh.lingua = '$L';";          // prende il vocaboli dal db
+
+            $resL= $conn->query($sqlL);       // salvo il risultato
+
+            if (!$resL) {
+                die('Errore nella query: ' . $conn->error);
+            }
+            
+            $k = 0;
+            while( $rowL = $resL->fetch_assoc()){
+                $ref = $rowL['VocRef'];
+                $voc  = $rowL['voc'];
+                $trad[$ref] = $voc;
+            }
+
+
 			if (isset($_POST['submitPaziente'])){
 
 				$id = $_POST['id'];
@@ -156,6 +177,7 @@
 					WHERE `ID`= '$id';";
 
 				$res= $conn->query($sql);
+
 
 				$row = $res->fetch_assoc();
 
@@ -559,6 +581,7 @@
 
 
 		?>
+		
 
 
 		<nav class="navbar fixed-top navbar-expand-lg bg-primary">
@@ -575,34 +598,48 @@
                 </div>
             </div>
         </nav>
-					
+
+        <!-- buttons to change language -->
+        <div style='margin-left: auto; margin-right: 5%; display: flex; justify-content: flex-end;'>
+            
+            <a href="paziente.php?ID=<?php echo $id; ?>&lang=ITA">
+                <button type="button" class='buttonLang'><img src="rsc/itFlag.svg" width='100%' height='100%'></button>
+            </a>
+            <a href="paziente.php?ID=<?php echo $id; ?>&lang=ENG">
+                <button type="button" class='buttonLang'><img src="rsc/enFlag.svg" width='100%' height='100%'></button>
+            </a>
+            <a href="paziente.php?ID=<?php echo $id; ?>&lang=ARAB">
+                <button type="button" class='buttonLang'><img src="rsc/kFlag.png" width='50%' height='100%'></button>
+            </a>
+        </div>
+
 		<div class='box'>
-			<h4>Informazioni Anagrafiche</h4>
+			<h4><?php echo $trad['Informazioni Anagrafiche']?></h4>
 			<br>
 			<dl class="mb-3 row">
-				<dt class="col-sm-2">Nome</dt>
+				<dt class="col-sm-2"><?php echo $trad['Nome']; ?></dt>
 				<dd class="col-sm-3"><?php echo $nome ?></dd>
-				<dt class="col-sm-2">Cognome</dt>
+				<dt class="col-sm-2"><?php echo $trad['Cognome']; ?></dt>
 				<dd class="col-sm-4"><?php echo $cognome ?></dd>
 			</dl>
 			<dl class="mb-3 row" >
-				<dt class="col-sm-2">Nome madre</dt>
+				<dt class="col-sm-2"><?php echo $trad['Nome della madre']; ?></dt>
 				<dd class="col-sm-3"><?php echo $nome_madre ?></dd>
-				<dt class="col-sm-2">Sesso</dt>
+				<dt class="col-sm-2"><?php echo $trad['Sesso']; ?></dt>
 				<dd class="col-sm-1"><?php echo $sesso ?></dd>
-				<dt class="col-sm-2">Data di nascita</dt>
+				<dt class="col-sm-2"><?php echo $trad['Data di nascita']; ?></dt>
 				<dd class="col-sm-1"><?php echo $dataN ?></dd>
 			</dl>
 			<dl class="mb-3 row">
-				<dt class="col-sm-2">Provenienza</dt>
+				<dt class="col-sm-2"><?php echo $trad['Provenienza']; ?></dt>
 				<dd class="col-sm-3"><?php echo $prov ?></dd>
 				<dt class="col-sm-2">ID</dt>
 				<dd class="col-sm-4"><?php echo $id ?></dd>
 			</dl>
 			<dl class="mb-3 row">
-				<dt class="col-sm-2">Numero Tenda</dt>
+				<dt class="col-sm-2"><?php echo $trad['Numero tenda']; ?></dt>
 				<dd class="col-sm-3"><?php echo $num_tenda ?></dd>
-				<dt class="col-sm-2">Sezione</dt>
+				<dt class="col-sm-2"><?php echo $trad['Sezione']; ?></dt>
 				<dd class="col-sm-4"><?php echo $sezione ?></dd>
 			</dl>
 		</div>
@@ -611,68 +648,68 @@
 		<?php
 			if($session_role >= 7){
 				echo "<div class='box'>
-						<h4>Informazioni Cliniche</h4>
+						<h4>".$trad['Informazioni Cliniche']."</h4>
 						<br>";	
 				if($infoCliniche == true){
 					echo "
-						<h5>Anamnesi Patologica Remota</h5>
+						<h5>".$trad['Anamnesi Patologica Remota']."</h5>
 						<br>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Il paziente ha avuto</dt>
+							<dt class='col-sm-12'>".$trad['Il paziente ha avuto']."</dt>
 							<dd class='col-sm-12'>".$anamnesi."</dd>
 						</dl>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Precedenti interventi chirugici</dt>
+							<dt class='col-sm-12'>".$trad['Precedenti interventi chirurgici']."</dt>
 							<dd class='col-sm-12'>".$picText."</dd>
 						</dl>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Precedenti ricoveri in ospedale</dt>
+							<dt class='col-sm-12'>".$trad['Precedenti ricoveri in ospedale']."</dt>
 							<dd class='col-sm-12'>".$proText."</dd>
 						</dl>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Precedenti visite mediche effettuate</dt>
+							<dt class='col-sm-12'>".$trad['Precedenti visite mediche effettuate']."</dt>
 							<dd class='col-sm-12'>".$vmeText."</dd>
 						</dl>
 						
 						<hr class='hr'/>
 
-						<h5>Malattie dei genitori</h5>
+						<h5>".$trad['Malattie dei genitori']."</h5>
 						<br>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Malattie dei genitori del paziente</dt>
+							<dt class='col-sm-12'>".$trad['Malattie dei genitori']."</dt>
 							<dd class='col-sm-12'>".$genitori."</dd>
 						</dl>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Malattie allergiche</dt>
+							<dt class='col-sm-12'>".$trad['Malattie Allergiche']."</dt>
 							<dd class='col-sm-12'>".$malattieA."</dd>
 						</dl>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Malattie endocrine</dt>
+							<dt class='col-sm-12'>".$trad['Malattie Endocrine']."</dt>
 							<dd class='col-sm-12'>".$malattieE."</dd>
 						</dl>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Tumori</dt>
+							<dt class='col-sm-12'>".$trad['Tumori']."</dt>
 							<dd class='col-sm-12'>".$tumori."</dd>
 						</dl>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Allergie</dt>
+							<dt class='col-sm-12'>".$trad['Allergie']."</dt>
 							<dd class='col-sm-12'>".$allergie."</dd>
 						</dl>
 						
 						<hr class='hr'/>
-						<h5>Terapia Cronica</h5>
+						<h5>".$trad['Terapia Cronica']."</h5>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Terapia cronica</dt>
+							<dt class='col-sm-12'>".$trad['Terapia cronica']."</dt>
 							<dd class='col-sm-12'>".$terapiaC.", ".$altro."</dd>
 						</dl>
 						<hr class='hr'/>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Vaccinazioni eseguite</dt>
+							<dt class='col-sm-12'>".$trad['Vaccinazioni eseguite']."</dt>
 							<dd class='col-sm-12'>".$vaccinazioni."</dd>
 						</dl>
 						<hr class='hr'/>
 						<dl class='mb-3 row'>
-							<dt class='col-sm-12'>Note</dt>
+							<dt class='col-sm-12'>".$trad['Note']."</dt>
 							<dd class='col-sm-12'>".$noteP."</dd>
 						</dl>";
 				}
@@ -687,13 +724,13 @@
 			}
 			if($session_role >= 7 || $session_role == 5){
 				echo "<div class='box'>
-						<h4>Esami</h4>
+						<h4>".$trad['Esami']."</h4>
 						<table class='table table-hover'>
 							<thead>
 								<tr>
 									<th scope='col'>#</th>
-									<th scope='col'>Data</th>
-									<th scope='col'>Tipologia&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+									<th scope='col'>".$trad['Data visita']."</th>
+									<th scope='col'>".$trad['Tipologia']."&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
 								</tr>
 							</thead>
 							<tbody>";	
@@ -702,22 +739,22 @@
 					$k++;
 					
 					if($row["tipo"] == 'el'){
-						$tipo = 'Esame Laboratorio';
+						$tipo = $trad["Esame Laboratorio"];
 					}
 					if($row["tipo"] == 'ecg'){
-						$tipo = 'Elettrocardiogramma';
+						$tipo = $trad['Elettrocardiogramma'];
 					}
 					if($row["tipo"] == 'rg'){
-						$tipo = 'Radiografia';
+						$tipo = $trad['Radiografia'];
 					}
 					if($row["tipo"] == 'eg'){
-						$tipo = 'Ecografia';
+						$tipo = $trad['Ecografia'];
 					}
 					if($row["tipo"] == 'tac'){
-						$tipo = 'TAC';
+						$tipo = $trad['TAC'];
 					}
 					if($row["tipo"] == 'rm'){
-						$tipo = 'Risonanza Magnetica';
+						$tipo = $trad['Risonanza Magnetica'];
 					}
 
 					$link = '"esame.php?ID='.$id.'&data='.$row["data"].'&tipo='.$row["tipo"].'&num_esame='.$row["num_esame"].'"';
@@ -731,7 +768,7 @@
 				echo "</tbody>
 						</table>
 						<a href='addEsame.php?ID=".$id."'>
-							<input type='button' class='btn btn-primary w-100 p-1 fs-6' value='Nuovo esame'></button>
+							<input type='button' class='btn btn-primary w-100 p-1 fs-6' value='Add exam''></button>
 						</a>
 					</div>
 					<br>";
@@ -739,13 +776,13 @@
 			}
 			if($session_role >= 6){	
 				echo "<div class='box'>
-						<h4>Ricette</h4>
+						<h4>".$trad['Ricette']."</h4>
 						<table class='table table-hover'>
 							<thead>
 								<tr>
 									<th scope='col'>#</th>
-									<th scope='col'>Nome Farmaco</th>
-									<th scope='col'>Data&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
+									<th scope='col'>".$trad['Nome Farmaco']."</th>
+									<th scope='col'>".$trad['Validità']."&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
 								</tr>
 							</thead>
 							<tbody>";
@@ -753,7 +790,7 @@
 			while($row = $resRicetta->fetch_assoc()) {
 				$k++;
 				if ($row["validità"] == NULL){
-					$x = "NON VALIDA";
+					$x = "<p style='color:red;'>NON VALIDA</p>";
 				}
 				else {
 					$x = $row["validità"];
@@ -772,7 +809,7 @@
 			}
 			if($session_role >= 7){	
 				echo "<a href='addRicetta.php?ID=".$id."'>
-						<input type='button' class='btn btn-primary w-100 p-1 fs-6' value='Nuova ricetta'></button>
+						<input type='button' class='btn btn-primary w-100 p-1 fs-6' value='New prescription'></button>
 					</a>";
 			}
 			if($session_role >= 6){	
@@ -781,12 +818,12 @@
 			}
 			if($session_role >= 7){	
 				echo "<div class='box'>
-						<h4>Visite</h4>
+						<h4>".$trad['Visite']."</h4>
 						<table class='table table-hover'>
 							<thead>
 								<tr>
 									<th scope='col'>#</th>
-									<th scope='col'>Data</th>
+									<th scope='col'>".$trad['Data visita']."</th>
 									<th scope='col'></th>
 								</tr>
 							</thead>
@@ -803,7 +840,7 @@
 			echo "</tbody>
 						</table>
 						<a href='addVisita.php?ID=".$id."'>
-							<input type='button' class='btn btn-primary w-100 p-1 fs-6' value='Nuova visita'></button>
+							<input type='button' class='btn btn-primary w-100 p-1 fs-6' value='New visit'></button>
 						</a>
 					</div>
 					<br>";
@@ -811,16 +848,16 @@
 		?>
 		<div class="box">
 				<a href="listaPazienti.php">
-					<button type="button" class="btn btn-secondary btn-lg col-2">Torna indietro</button>
+					<button type="button" class="btn btn-secondary btn-lg col-2"><?php echo $trad['Torna indietro']; ?></button>
 				</a>
 			<form action='modificaAnagrafica.php' method='post'>
-				<button type="submit" class="btn btn-warning btn-lg col-2" style="position: absolute; left: 40%; transform: translateX(-50%); margin-top: -49px" value='<?php echo $id ?>' name='modificaA'>Modifica anagrafica</button>
+				<button type="submit" class="btn btn-warning btn-lg col-2" style="position: absolute; left: 40%; transform: translateX(-50%); margin-top: -49px" value='<?php echo $id ?>' name='modificaA'><?php echo $trad['Modifica']; ?> anagrafica</button>
 			</form>
 			<form action='modificaInfoCliniche.php' method='post'>
-				<button type="submit" class="btn btn-warning btn-lg col-2" style="position: absolute; left: 60%; transform: translateX(-50%); margin-top: -49px" value='<?php echo $id ?>' name='modificaP'>Modifica dati clinici</button>
+				<button type="submit" class="btn btn-warning btn-lg col-2" style="position: absolute; left: 60%; transform: translateX(-50%); margin-top: -49px" value='<?php echo $id ?>' name='modificaP'><?php echo $trad['Modifica']; ?> dati clinici</button>
 			</form>
 			<form action='listaPazienti.php' method='post' onsubmit='return show_alert();'>
-				<button type="submit" class="btn btn-danger btn-lg col-2 float-end" style="margin-top: -49px;" value='<?php echo $id ?>' name='eliminaP'>Elimina</button>
+				<button type="submit" class="btn btn-danger btn-lg col-2 float-end" style="margin-top: -49px;" value='<?php echo $id ?>' name='eliminaP'><?php echo $trad['Elimina']; ?></button>
 			</form>
 		</div>
 

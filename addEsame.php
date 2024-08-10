@@ -14,7 +14,44 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
+        <?php
+            session_start();
 
+            if (isset($_SESSION['session_id'])) {
+                $session_user = htmlspecialchars($_SESSION['session_user'], ENT_QUOTES, 'UTF-8');
+                $session_id = htmlspecialchars($_SESSION['session_id']);
+                $session_role = htmlspecialchars($_SESSION['session_role']);
+                $session_lang = htmlspecialchars($_SESSION['session_lang']);
+            } else {
+                header('Location: /');
+            }
+        ?>
+
+        
+    </head>
+    <body>
+        <?php
+            $id = $_GET["ID"];
+
+            require_once('db.php');         // collegamento al database
+            $_SESSION['session_lang'] = $_GET["lang"] ?? $session_lang;     // assegno la lingua alla var di sessione se il valore passato con il GET altrimenti riassegno se stessa 
+            $L = htmlspecialchars($_SESSION['session_lang']);               // variabile di appoggio
+            
+            $sqlL = "SELECT * FROM vocaddesame AS g WHERE g.lingua = '$L' UNION ALL SELECT * FROM guihome AS gh WHERE gh.lingua = '$L';";          // prende il vocaboli dal db
+
+            $resL= $conn->query($sqlL);       // salvo il risultato
+
+            if (!$resL) {
+                die('Errore nella query: ' . $conn->error);
+            }
+            
+            $k = 0;
+            while( $row = $resL->fetch_assoc()){
+                $ref = $row['VocRef'];
+                $voc  = $row['voc'];
+                $trad[$ref] = $voc;
+            }
+        ?>
         <script>
             esDisp = false;
             cbDisp = false;
@@ -39,13 +76,13 @@
                 if(val == 'el'){
                     strEs = "'addE'";
                     document.getElementById("el").innerHTML = '<div class="mb-3 row">\
-                        <label for="dataV" class="col-sm-2 col-form-label">Data visita</label>\
+                        <label for="dataV" class="col-sm-2 col-form-label"><?php echo $trad['Data visita']?></label>\
                         <div class="col-sm-10">\
                             <input type="date" class="form-control" id="dataV" name="dataV" required>\
                         </div>\
                     </div>\
                     <div class="mb-3 row">\
-                        <label for="cbc" class="col-sm-2 col-form-label">Aggiungi esame</label>\
+                        <label for="cbc" class="col-sm-2 col-form-label"><?php echo $trad['Aggiungi esame']?></label>\
                         <div class="col-sm-9">\
                             <select class="form-select" name="addE" id="addE" required>\
                                 <option selected>Seleziona</option>\
@@ -94,7 +131,7 @@
                     <div id="vldl"></div>\
                     <div class="mb-3 row">\
                         <div class="input-group">\
-                            <span class="input-group-text">Note</span>\
+                            <span class="input-group-text"><?php echo $trad['Note']?></span>\
                             <textarea class="form-control" name="noteV" aria-label="With textarea" rows="10" style="height:100%;"></textarea>\
                         </div>\
                     </div>\
@@ -106,7 +143,7 @@
 
                 if(val == 'ecg' || val == 'rg' || val == 'eg' || val == 'tac' || val == 'rm'){
                     document.getElementById("esLab").innerHTML = '<div class="mb-3 row">\
-                        <label for="dataV" class="col-sm-2 col-form-label">Data visita</label>\
+                        <label for="dataV" class="col-sm-2 col-form-label"><?php echo $trad['Data visita']?></label>\
                         <div class="col-sm-10">\
                             <input type="date" class="form-control" id="dataV" name="dataV" required>\
                         </div>\
@@ -119,7 +156,7 @@
                     </div>\
                     <div class="mb-3 row">\
                         <div class="input-group">\
-                            <span class="input-group-text">Note</span>\
+                            <span class="input-group-text"><?php echo $trad['Note']?></span>\
                             <textarea class="form-control" name="noteV" aria-label="With textarea" rows="10" style="height:100%;"></textarea>\
                         </div>\
                     </div>\
@@ -777,19 +814,14 @@
 
 
         </script>
-    </head>
-    <body>
-        <?php
-            $id = $_GET["ID"];
-        ?>
 
         <nav class="navbar fixed-top navbar-expand-lg bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="home.php" style="color: white; font-size: 24px;"><b>Home</b></a>
-                <h2>Nuovo esame - <?php echo $id ?></h2>
+                <a class="navbar-brand" href="home.php" style="color: white; font-size: 24px;"><b><?php echo $trad['Home']; ?></b></a>
+                <h2>New Exam - <?php echo $id ?></h2>
                 <div class="d-flex">
                     <span class="navbar-text" style="color: white; font-size: 20px; padding-right: 10px;">
-                        Nome Utente
+                    <?php echo $session_user; ?>
                     </span>
 
                     <button type="button" class="btn btn-danger">Logout</button>
@@ -798,25 +830,25 @@
         </nav>
         
 		<a href="javascript:history.go(-1)">
-			<button type="button" class="btn btn-secondary" style="margin-left: 5%;margin-bottom: 15px;"><-- Indietro</button>
+			<button type="button" class="btn btn-secondary" style="margin-left: 5%;margin-bottom: 15px;"><--</button>
 		</a>
         
         <div class='box'>
             
-            <h4>Scegli tipologia esame</h4>
+            <h4><?php echo $trad['Scegli tipologia esame'];?></h4>
             <br>
             <form action="esame.php?ID=<?php echo $id ?>" method="post" enctype="multipart/form-data">
                 <div class="mb-3 row">
-                    <label for="tipo" class="col-sm-2 col-form-label">Tipologia esame</label>
+                    <label for="tipo" class="col-sm-2 col-form-label"><?php echo $trad['Tipologia esame']?></label>
                     <div class="col-sm-10">
                         <select class="form-select" name="tipo" id="tipo" onchange='setEsame(this.value)'>
                             <option>- select -</option>
-                            <option value="el">Esame Laboratorio</option>
-                            <option value="ecg">Elettrocardiogramma</option>
-                            <option value="rg">Radiografie</option>
-                            <option value="eg">Ecografia</option>
-                            <option value="tac">TAC</option>
-                            <option value="rm">Risonanza Magnetica</option>
+                            <option value="el"><?php echo $trad['Esame Laboratorio']?></option>
+                            <option value="ecg"><?php echo $trad['Elettrocardiogramma']?></option>
+                            <option value="rg"><?php echo $trad['Radiografie']?></option>
+                            <option value="eg"><?php echo $trad['Ecografia']?></option>
+                            <option value="tac"><?php echo $trad['TAC']?></option>
+                            <option value="rm"><?php echo $trad['Risonanza Magnetica']?></option>
                         </select>
                     </div>
                 </div>

@@ -48,14 +48,20 @@
             $_SESSION['session_lang'] = $_GET["lang"] ?? $session_lang;
             $L = htmlspecialchars($_SESSION['session_lang']);
             
-            $sql = "SELECT $L FROM `vocaddpaziente`";
+            $sql = "SELECT * FROM vocglobal AS g WHERE g.lingua = '$L' UNION ALL SELECT * FROM guihome AS gh WHERE gh.lingua = '$L';";          // prende il vocaboli dal db
 
-            $res= $conn->query($sql);
+            $res= $conn->query($sql);       // salvo il risultato
 
+            if (!$res) {
+                die('Errore nella query: ' . $conn->error);
+            }
+            
             $k = 0;
             while( $row = $res->fetch_assoc()){
-                $lang[$k] = $row;
-                $k++;
+                
+                $ref = $row['VocRef'];
+                $voc  = $row['voc'];
+                $trad[$ref] = $voc;
             }
         ?>
 

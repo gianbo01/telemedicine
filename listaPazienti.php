@@ -14,11 +14,30 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </head>
     <body>
-        
+        <?php
+            require_once('db.php');         // collegamento al database
+            $_SESSION['session_lang'] = $_GET["lang"] ?? $session_lang;     // assegno la lingua alla var di sessione se il valore passato con il GET altrimenti riassegno se stessa 
+            $L = htmlspecialchars($_SESSION['session_lang']);               // variabile di appoggio
+            
+            $sql = "SELECT * FROM voclista AS g WHERE g.lingua = '$L' UNION ALL SELECT * FROM guihome AS gh WHERE gh.lingua = '$L';";          // prende il vocaboli dal db
+
+            $res= $conn->query($sql);       // salvo il risultato
+
+            if (!$res) {
+                die('Errore nella query: ' . $conn->error);
+            }
+            
+            $k = 0;
+            while( $row = $res->fetch_assoc()){
+                $ref = $row['VocRef'];
+                $voc  = $row['voc'];
+                $trad[$ref] = $voc;
+            }
+        ?>
         <nav class="navbar fixed-top navbar-expand-lg bg-primary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="home.php" style="color: white; font-size: 24px;"><b>Home</b></a>
-                <h2>Tutti i Pazienti</h2>
+                <a class="navbar-brand" href="home.php" style="color: white; font-size: 24px;"><b><?php echo $trad['Home']; ?></b></a>
+                <h2><?php echo $trad['Tutti i pazienti']; ?></h2>
                 <div class="d-flex">
                     <span class="navbar-text" style="color: white; font-size: 20px; padding-right: 10px;">
                         Nome Utente
@@ -32,9 +51,21 @@
 
         
 		<a href="home.php">
-			<button type="button" class="btn btn-secondary" style="margin-left: 5%;margin-bottom: 15px;"><-- Indietro</button>
-		</a>
-
+            <button type="button" class="btn btn-secondary" style="margin-left: 5%;margin-bottom: 15px;"><-- <?php echo $trad['Indietro']; ?></button>
+        </a>
+        <!-- buttons to change language -->
+        <div style='margin-left: auto; margin-right: 5%; display: flex; justify-content: flex-end;'>
+            
+            <a href="listapazienti.php?lang=ITA">
+                <button type="button" class='buttonLang'><img src="rsc/itFlag.svg" width='100%' height='100%'></button>
+            </a>
+            <a href="listapazienti.php?lang=ENG">
+                <button type="button" class='buttonLang'><img src="rsc/enFlag.svg" width='100%' height='100%'></button>
+            </a>
+            <a href="listapazienti.php?lang=ARAB">
+                <button type="button" class='buttonLang'><img src="rsc/kFlag.png" width='50%' height='100%'></button>
+            </a>
+        </div>
 
         <?php 
             require_once('db.php');
@@ -73,16 +104,16 @@
                             ID
                         </th>
                         <th scope="col" class="flex-fill">
-                            Cognome
+                            <?php echo $trad['cognome']; ?>
                         </th>
                         <th scope="col" class="flex-fill">
-                            Nome
+                            <?php echo $trad['nome']; ?>
                         </th>
                         <th scope="col" class="flex-fill">
-                            Nato il
+                            <?php echo $trad['Nato il']; ?>
                         </th>
                         <th scope="col" class="flex-fill">
-                            Provenienza
+                            <?php echo $trad['Provenienza']; ?>
                         </th>
                     </tr>
                 </thead>

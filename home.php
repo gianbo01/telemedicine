@@ -35,10 +35,6 @@
             
             $sql = "SELECT * FROM vocglobal AS g WHERE g.lingua = '$L' UNION ALL SELECT * FROM guihome AS gh WHERE gh.lingua = '$L';";          // prende il vocaboli dal db
 
-            // $sql = "SELECT * FROM guihome AS gh UNION SELECT * FROM vocglobal AS g;";
-
-            // $sql = "SELECT $L FROM `vochome`";
-
             $res= $conn->query($sql);       // salvo il risultato
 
             if (!$res) {
@@ -76,7 +72,7 @@
         <br>
 
         <!-- buttons to change language -->
-        <div style='margin-left: 86%;'>
+        <div style='margin-left: auto; margin-right: 5%; display: flex; justify-content: flex-end;'>
             <a href="home.php?lang=ITA">
                 <button type="button" class='buttonLang'><img src="rsc/itFlag.svg" width='100%' height='100%'></button>
             </a>
